@@ -12,8 +12,7 @@ def findAdapters(data):
         elif (data[i+1]-data[i]) == 3:
             plus3 += 1
         else:
-            print(
-                f"data[{i+1}]-data[{i}] = {data[i+1]}-{data[i]} = {data[i+1]-data[i]}")
+            print(f"data[{i+1}]-data[{i}] = {data[i+1]}-{data[i]} = {data[i+1]-data[i]}")
 
     print(f"plus1 * plus3 = {plus1} * {plus3} = {plus1 * plus3}")
     return plus1 * plus3
