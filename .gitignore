@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+adventOfCode.code-workspace
+library of functions.py
+template.ipynb
+test.py
