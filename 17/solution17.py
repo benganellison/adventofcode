@@ -27,6 +27,7 @@ def neighbourscube(cube, xcoord, ycoord, zcoord):
                     row.append(cube[z][y][x])
             out += row
     return out
+    
 
 # x y z represent the coordinate to find neighbours to
 def neighbours4dim(pocketdim, xcoord, ycoord, zcoord, wcoord):
