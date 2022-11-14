@@ -131,3 +131,4 @@ adventOfCode.code-workspace
 library of functions.py
 template.ipynb
 test.py
+.DS_Store
