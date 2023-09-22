@@ -38,3 +38,4 @@ with open('input.txt') as input_file:
 
   # Print the results
   print('Elf', max_elf, 'is carrying the most calories:', max_calories)
+
