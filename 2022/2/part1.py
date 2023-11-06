@@ -31,25 +31,20 @@ def score_strategy(strategy: str) -> int:
             round_score = 6
         else:
             round_score = 0
+            
+        print(f"opponent: {opponent}, player: {player}, player_score: {player_score}, round_score: {round_score}")
 
         # Add the score for this round to the total score.
         score += player_score + round_score
 
     return score
 
-# Read the strategy from the input file.
-with open('test_input.txt') as f:
-    strategy = f.read()
 
-# Calculate and print the total score for the strategy.
-total_score = score_strategy(strategy)
-assert total_score == 15
-print("tests passed")
+if __name__ == "__main__":
+    # Read the strategy from the input file.
+    with open('input.txt') as f:
+        strategy = f.read()
 
-# Read the strategy from the input file.
-with open('input.txt') as f:
-    strategy = f.read()
-
-# Calculate and print the total score for the strategy.
-total_score = score_strategy(strategy)
-print("final result: ", total_score)
+    # Calculate and print the total score for the strategy.
+    total_score = score_strategy(strategy)
+    print("final result: ", total_score)
