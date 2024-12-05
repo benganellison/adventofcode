@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+from timeit import repeat
 def fix_manual(manual, rules):
     fixed = False
     for page_no in range(len(manual)):
@@ -13,8 +14,12 @@ def fix_manual(manual, rules):
     return manual
 
 
-def main(input):
+def main():
     result = 0
+    # Read the strategy from the input file.
+    with open("input.txt") as f:
+        input = f.read()
+
 
     rules = {}
     for rule in input.split("\n\n")[0].split("\n"):
@@ -35,11 +40,10 @@ def main(input):
             # print("manual not safe")
             manual = fix_manual(manual, rules)
             # print("manual safe")
-            manual = [int(i) for i in manual]
             # print(manual, manual[int(len(manual) / 2)])
-            result += manual[int(len(manual) / 2)]
+            result += int(manual[int(len(manual) / 2)])
 
-    return result
+    # print("final result: ", result)
 
 def is_manual_safe(rules, manual):
     manual_safe = True
@@ -59,10 +63,16 @@ def is_manual_safe(rules, manual):
 
 
 if __name__ == "__main__":
-    # Read the strategy from the input file.
-    with open("input.txt") as f:
-        input = f.read()
 
-    # Calculate and print the total score for the strategy.
-    result = main(input)
-    print("final result: ", result)
+    result_new = repeat(main, number=1, repeat=100)
+
+    def print_statistics(results, label):
+        min_result = min(results)
+        max_result = max(results)
+        avg_result = sum(results) / len(results)
+        std_dev = (sum((x - avg_result) ** 2 for x in results) / len(results)) ** 0.5
+        print(
+            f"{label} Min: {min_result:.5f}, Max: {max_result:.5f}, Avg: {avg_result:.5f}, Std Dev: {std_dev:.5f}"
+        )
+
+    print_statistics(result_new, "New")
