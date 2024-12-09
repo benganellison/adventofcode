@@ -1,13 +1,5 @@
 #! /usr/bin/env python
 def find_map_disk(input) -> str:
-    """Find the map disk.
-
-    Args:
-        input (str): The input.
-
-    Returns:
-        list: The map disk.
-    """
     map_disk = []
     free_space_map = {}
     for i, row in enumerate(input):
@@ -24,26 +16,16 @@ def find_map_disk(input) -> str:
     return map_disk
 
 def move_to_free_space(map_disk):
-    """Move to free space.
-
-    Args:
-        map_disk (str): The map disk.
-
-    """
     new_map_disk = [*map_disk]
     for i, old_block_id in enumerate(new_map_disk):
         if old_block_id == ".":
             last_block_id = new_map_disk.pop()
-            # print("new_map_disk: ", "".join(new_map_disk), 'i: ', i, 'block: ', block, len(new_map_disk))
             while last_block_id == ".":
                 last_block_id = new_map_disk.pop()
             if i < len(new_map_disk):
                 new_map_disk[i] = last_block_id
             else:
                 new_map_disk.append(last_block_id)
-
-    # for i in range(len(new_map_disk)-1, len(map_disk)+1):
-    #     new_map_disk.append(".")
 
     return new_map_disk
 
