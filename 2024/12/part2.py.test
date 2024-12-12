@@ -1,0 +1,64 @@
+#! /usr/bin/env python
+from collections import deque, defaultdict
+
+def flood_fill(land_map):
+    """flood fill to find the borders of connected regions
+
+    Args:
+        land_map (_type_): a list of list of characters representing the land
+    """
+    # find the starting coordinate
+    starting_positions = defaultdict(list)
+    for x in range(len(land_map)):
+        for y in range(len(land_map[0])):
+            if land_map[x][y] not in starting_positions:
+                starting_positions[land_map[x][y]] = (x, y)
+
+    for land_type, (x, y) in starting_positions.items():
+        # create a queue to keep track of the coordinates to be visited
+        queue = deque([(x, y)])
+        visited = set([(x, y)])
+        borders = set()
+
+        # create a dictionary to keep track of the coordinates of the connected region
+        connected_region = defaultdict(set)
+        connected_region[(x, y)] = set([(x, y)])
+
+        while queue:
+            # get the current coordinate
+            x, y = queue.popleft()
+
+            # check the neighbors of the current coordinate
+            for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                new_x, new_y = x + dx, y + dy
+
+                # check if the new coordinate is within the bounds of the land map
+                if 0 <= new_x < len(land_map) and 0 <= new_y < len(land_map[0]):
+                    # check if the new coordinate has not been visited
+                    if (new_x, new_y) not in visited:
+                        # check if the new coordinate is part of the connected region
+                        if land_map[new_x][new_y] == land_type:
+                            connected_region[(x, y)].add((new_x, new_y))
+                            connected_region[(new_x, new_y)] = connected_region[(x, y)]
+                            queue.append((new_x, new_y))
+                            visited.add((new_x, new_y))
+                        else:
+                            borders.add((new_x, new_y))
+
+    return borders, connected_region
+
+def main(input):
+    land_map = input.split("\n")
+    land_map = [list(row) for row in land_map]
+
+    return result
+
+
+if __name__ == "__main__":
+    # Read the strategy from the input file.
+    with open("input.txt") as f:
+        input = f.read()
+
+    # Calculate and print the total score for the strategy.
+    result = main(input)
+    print("final result: ", result)
