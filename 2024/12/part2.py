@@ -8,68 +8,91 @@ def explore_new_regions(land_map: list[list[str]]):
             landtypes[land_type].append((x, y))
     return landtypes
 
-def bfs(start, valid_neighbors):
+def find_regions_not_connected(landtypes: dict[str, list[tuple]]):
     directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    que = deque([start])
-    visited = set()
-    region = []
-    while que:
-        x, y = que.popleft()
-        if (x, y) in visited:
-            continue
-        visited.add((x, y))
-        region.append((x, y))
-        for dx, dy in directions:
-            new_x, new_y = x + dx, y + dy
-            if valid_neighbors(new_x, new_y):
-                que.append((new_x, new_y))
-    return region
-
-def find_cost_of_fences(landtypes: dict[str, list[tuple]]):
+    que = deque()
     regions = []
-    result = 0
     for land_type, coords in landtypes.items():
-        previous_regions = set()
+        previous_regions = []
         for coord in coords:
+            region = []
             if coord in previous_regions:
                 continue
-            region = bfs(coord, lambda x, y: (x, y) in landtypes[land_type] and (x, y) not in previous_regions)
-            previous_regions.update(region)
+            que.append(coord)
+            while que:
+                x, y = que.popleft()
+                if (x, y) in previous_regions:
+                    continue
+                for dx, dy in directions:
+                    new_x, new_y = x + dx, y + dy
+                    if (new_x, new_y) in landtypes[land_type] and (new_x, new_y) not in previous_regions:
+                        que.append((new_x, new_y))
+                region.append((x, y))
+                previous_regions.append((x, y))
             regions.append(region)
-            result += calculate_perimeter_cost(region)
-    return result
+    return regions
 
 def find_islands(coords: list[tuple]):
-    empty_area = get_empty_areas(coords)
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    que = deque()
     connected_areas = []
+    max_x, max_y, min_x, min_y = find_max_min(coords)
+    empty_area = get_empty_areas(coords, (min_x, min_y, max_x, max_y))
+    checked = set()
     for coord in empty_area:
         if any(coord in area for area in connected_areas):
             continue
-        island = bfs(
-            coord, lambda x, y: (x, y) in empty_area and (x, y) not in connected_areas
-        )
+        que.append(coord)
+        island = []
+        while que:
+            x, y = que.popleft()
+            if (x, y) in island or (x, y) in checked:
+                continue
+            if any(coord in area for area in connected_areas):
+                continue
+            island.append((x, y))
+            checked.add((x, y))
+            for dx, dy in directions:
+                new_x, new_y = x + dx, y + dy
+                if (new_x, new_y) in empty_area:
+                    if (new_x, new_y) not in checked:
+                        que.append((new_x, new_y))
         connected_areas.append(island)
     return connected_areas
 
-
-def get_empty_areas(coords):
-    max_x, max_y, min_x, min_y = find_max_min(coords)
-    return [(x, y) for x in range(min_x-1, max_x+1) for y in range(min_y-1, max_y+1) if (x, y) not in coords]
-
+def get_empty_areas(coords, boundaries):
+    empty_area = []
+    min_x, min_y, max_x, max_y = boundaries
+    for x in range(min_x, max_x):
+        for y in range(min_y, max_y):
+            if (x, y) not in coords:
+                empty_area.append((x, y))
+    return empty_area
 
 def find_max_min(coords):
-    xs, ys = zip(*coords)
-    return max(xs), max(ys), min(xs), min(ys)
+    max_x, max_y = 0, 0
+    min_x, min_y = -1, -1
+    for x, y in coords:
+        if x > max_x:
+            max_x = x
+        if x < min_x or min_x == -1:
+            min_x = x
+        if y > max_y:
+            max_y = y
+        if y < min_y or min_y == -1:
+            min_y = y
+    return max_x, max_y, min_x, min_y
 
-def calculate_perimeter_cost(coords: list[tuple]):
+def calculate_perimeter_cost(regions: list[list[tuple]]):
     total_cost = 0
-    perimeter, visited = get_outer_bounds(coords)
-    connected_areas = find_islands(coords)
-    connected_areas = [area for area in connected_areas if not any((x, y) in area for x, y, _ in visited)]
-    for area in connected_areas:
-        new_perimeter, _ = get_outer_bounds(area)
-        perimeter += new_perimeter
-    total_cost += perimeter * len(coords)
+    for coords in regions:
+        perimeter, visited = get_outer_bounds(coords)
+        connected_areas = find_islands(coords)
+        connected_areas = [area for area in connected_areas if not any((x, y) in area for x, y, _ in visited)]
+        for area in connected_areas:
+            new_perimeter, _ = get_outer_bounds(area)
+            perimeter += new_perimeter
+        total_cost += perimeter * len(coords)
     return total_cost
 
 def get_outer_bounds(coords):
@@ -79,29 +102,41 @@ def get_outer_bounds(coords):
     direction = 0
     perimeter = 0
     visited = set()
+    left_turns = 0
     current_coord = start_coord
+    safty = 0
     while (*current_coord, direction) not in visited:
         next_coord = tuple(map(sum, zip(current_coord, directions[direction])))
         diagonally_right = tuple(map(sum, zip(current_coord, diagonals[direction])))
-        if not diagonally_right in coords:
+        if next_coord in coords:
+            visited.add((*current_coord, direction))
+            if left_turns == 4:
+                break
+            direction = (direction - 1) % 4
+            perimeter += 1
+            left_turns += 1
+        elif diagonally_right in coords:
+            left_turns = 0
+            visited.add((*current_coord, direction))
+            current_coord = next_coord
+            continue
+        else:
             visited.add((*current_coord, direction))
             direction = (direction + 1) % 4
             perimeter += 1
             current_coord = diagonally_right
-        elif next_coord in coords:
-            direction = (direction - 1) % 4
-            perimeter += 1
-        elif diagonally_right in coords:
-            visited.add((*current_coord, direction))
-            current_coord = next_coord
-
-
+            left_turns = 0
+        safty += 1
+        if safty > 1000:
+            break
     return perimeter, visited
 
 def main(input):
-    land_map = [list(row) for row in input.split("\n")]
+    land_map = input.split("\n")
+    land_map = [list(row) for row in land_map]
     landtypes = explore_new_regions(land_map)
-    result = find_cost_of_fences(landtypes)
+    regions = find_regions_not_connected(landtypes)
+    result = calculate_perimeter_cost(regions)
     return result
 
 if __name__ == "__main__":
