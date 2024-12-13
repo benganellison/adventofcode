@@ -1,0 +1,77 @@
+#! /usr/bin/env python
+import re
+from math import gcd
+
+def solve_linear_problem(ax, bx, px, ay, by, py):
+    D = ax * by - ay * bx
+    if D == 0:
+        return None
+
+    A = (px * by - py * bx)
+    B = (ax * py - ay * px)
+
+    if A % D != 0 or B % D != 0:
+        return None
+
+    A //= D
+    B //= D
+
+    if A < 0 or B < 0:
+        return None
+    
+    return A, B
+
+
+def solve_claw_machines(claw_machines):
+    results = []
+    for machine in claw_machines:
+        ax, ay = machine["A"]
+        bx, by = machine["B"]
+        px, py = machine["Prize"]
+
+        result = solve_linear_problem(ax, bx, px, ay, by, py)
+        if result is not None:
+            a_presses, b_presses = result
+            cost = a_presses * 3 + b_presses
+            results.append(cost)
+
+    total_cost = sum(results)
+    return len(results), total_cost
+
+
+def parse_input(input_text):
+    machines = []
+    machine_pattern = re.compile(
+        r"Button A: X\+(\d+), Y\+(\d+)\n"
+        r"Button B: X\+(\d+), Y\+(\d+)\n"
+        r"Prize: X=(\d+), Y=(\d+)"
+    )
+    for match in machine_pattern.finditer(input_text):
+        a_x, a_y, b_x, b_y, prize_x, prize_y = map(int, match.groups())
+        machines.append(
+            {
+                "A": (a_x, a_y),
+                "B": (b_x, b_y),
+                "Prize": (prize_x + 10000000000000, prize_y + 10000000000000),
+            }
+        )
+    return machines
+
+
+def main(input):
+    # Solve and display results
+    claw_machines = parse_input(input)
+    num_prizes, total_tokens = solve_claw_machines(claw_machines)
+    print(f"Prizes won: {num_prizes}")
+    print(f"Total tokens spent: {total_tokens}")
+    return total_tokens, num_prizes
+
+
+if __name__ == "__main__":
+    # Read the strategy from the input file.
+    with open("input.txt") as f:
+        input = f.read()
+
+    # Calculate and print the total score for the strategy.
+    total_token, result = main(input)
+    print("final result: ", result)
