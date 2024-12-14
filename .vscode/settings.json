@@ -1,3 +1,4 @@
 {
-    "python.testing.cwd": "tests"
+    "python.testing.cwd": "tests",
+    "taipyStudio.gUI.elementsFilePaths": []
 }
