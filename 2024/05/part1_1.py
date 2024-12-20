@@ -50,9 +50,9 @@ def collect_and_sort_numbers(input_file, output_file):
     sorted_numbers = topological_sort(pairs)
     print(sorted_numbers)
 
-    with open(output_file, 'w') as file:
-        for number in sorted_numbers:
-            file.write(f"{number},")
+    # with open(output_file, 'w') as file:
+    #     for number in sorted_numbers:
+    #         file.write(f"{number},")
 
 if __name__ == "__main__":
     input_file = 'input.txt'
