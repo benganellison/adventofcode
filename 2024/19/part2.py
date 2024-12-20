@@ -30,13 +30,15 @@ def main(input):
     towel_patterns = [pattern.strip() for pattern in towel_patterns_input.split(",")]
     desired_designs = desired_designs_input.split("\n")
     result = count_possible_designs(towel_patterns, desired_designs)
+    print(f"Number of possible designs: {result}")
     return result
 
 
 if __name__ == "__main__":
+    # Read the strategy from the input file.
     with open("input.txt") as f:
         input = f.read()
 
-    for i_ in range(100):
-        result = main(input)
+    # Calculate and print the total score for the strategy.
+    result = main(input)
     print("final result: ", result)
