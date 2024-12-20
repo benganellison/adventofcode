@@ -1,37 +1,26 @@
 #! /usr/bin/env python
 
+DIRECTIONS = [">", "v", "<", "^"]
+MOVES = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+
 def get_direction_from_representation(direction_representation):
-    if direction_representation == ">":
-        return 0
-    elif direction_representation == "v":
-        return 90
-    elif direction_representation == "<":
-        return 180
-    elif direction_representation == "^":
-        return 270
+    return DIRECTIONS.index(direction_representation)
+
 
 def get_direction_representation(direction):
-    if direction == 0:
-        return ">"
-    elif direction == 90:
-        return "v"
-    elif direction == 180:
-        return "<"
-    elif direction == 270:
-        return "^"
+    return DIRECTIONS[direction]
+
 
 def turn_right(direction):
-    new_direction = direction + 90
-    print("turning right", direction, new_direction)
-    if new_direction == 360:
-        return 0
-    return direction + 90
+    return (direction + 1) % 4
+
 
 def move_on_map(col, row, map_of_lab, direction):
     print("moving on map", col, row, direction, get_direction_representation(direction))
     moved = 0
-    moving = "horizontally" if direction == 0 or direction == 180 else "vertically"
-    velocity = 1 if direction <= 90 else -1
+    moving = "horizontally" if direction % 2 == 0 else "vertically"
+    velocity = 1 if direction < 2 else -1
     print("moving vertically", velocity)
     while True:
         if moving == "horizontally":
@@ -46,8 +35,8 @@ def move_on_map(col, row, map_of_lab, direction):
         if map_of_lab[next_row][next_col] == "#":
             print("found wall at ", next_col, next_row, "stopping at ", col, row)
             direction = turn_right(direction)
-            moving = "horizontally" if direction == 0 or direction == 180 else "vertically"
-            velocity = 1 if direction <= 90 else -1
+            moving = "horizontally" if direction % 2 == 0 else "vertically"
+            velocity = 1 if direction < 2 else -1
             continue
         moved += 1
         row = next_row

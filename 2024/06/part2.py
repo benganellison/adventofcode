@@ -1,32 +1,16 @@
 #! /usr/bin/env python
 
+DIRECTIONS = [">", "v", "<", "^"]
+MOVES = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
 def get_direction_from_representation(direction_representation):
-    if direction_representation == ">":
-        return 0
-    elif direction_representation == "v":
-        return 90
-    elif direction_representation == "<":
-        return 180
-    elif direction_representation == "^":
-        return 270
-
+    return DIRECTIONS.index(direction_representation)
 
 def get_direction_representation(direction):
-    if direction == 0:
-        return ">"
-    elif direction == 90:
-        return "v"
-    elif direction == 180:
-        return "<"
-    elif direction == 270:
-        return "^"
-
+    return DIRECTIONS[direction]
 
 def turn_right(direction):
-    new_direction = (direction + 90) % 360
-    return new_direction
-
+    return (direction + 1) % 4
 
 def find_starting_point(map_of_lab):
     for x in range(len(map_of_lab)):
@@ -35,21 +19,14 @@ def find_starting_point(map_of_lab):
                 return y, x, get_direction_from_representation(map_of_lab[x][y])
     return 0, 0, 0
 
-
 def move_on_map(col, row, map_of_lab, direction):
     map_height = len(map_of_lab)
     map_width = len(map_of_lab[0])
     direction_repr = get_direction_representation(direction)
     
     while True:
-        if direction == 0:  # moving right
-            next_row, next_col = row, col + 1
-        elif direction == 90:  # moving down
-            next_row, next_col = row + 1, col
-        elif direction == 180:  # moving left
-            next_row, next_col = row, col - 1
-        elif direction == 270:  # moving up
-            next_row, next_col = row - 1, col
+        drow, dcol = MOVES[direction]
+        next_row, next_col = row + drow, col + dcol
 
         if next_row >= map_height or next_row < 0 or next_col >= map_width or next_col < 0:
             return False
@@ -63,7 +40,7 @@ def move_on_map(col, row, map_of_lab, direction):
 
 def detect_cycle(col, row, map_of_lab, direction):
     current_pos = (col, row, direction)
-    previous = []
+    previous = set([current_pos])
 
     while True:
         current_pos = move_one_step(*current_pos, map_of_lab)
@@ -72,20 +49,14 @@ def detect_cycle(col, row, map_of_lab, direction):
 
         if current_pos in previous:
             return True
-        previous.append(current_pos)
+        previous.add(current_pos)
 
 def move_one_step(col, row, direction, map_of_lab):
     map_height = len(map_of_lab)
     map_width = len(map_of_lab[0])
     
-    if direction == 0:  # moving right
-        next_row, next_col = row, col + 1
-    elif direction == 90:  # moving down
-        next_row, next_col = row + 1, col
-    elif direction == 180:  # moving left
-        next_row, next_col = row, col - 1
-    elif direction == 270:  # moving up
-        next_row, next_col = row - 1, col
+    drow, dcol = MOVES[direction]
+    next_row, next_col = row + drow, col + dcol
 
     if next_row >= map_height or next_row < 0 or next_col >= map_width or next_col < 0:
         return None
