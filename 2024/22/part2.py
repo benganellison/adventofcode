@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-
+"""Optimized version of the solution for part two of day 22. run using pypy3 and not python3 to achieve the best performance."""
 from collections import defaultdict
 MOD = 16777216
 def parse_input_integers(input):
@@ -12,18 +12,11 @@ MAX_PATTERNS = 19**4  # 130321
 def main(input_text):
     secrets = parse_input_integers(input_text)
 
-    # Instead of defaultdict(int), we use a list for sums
-    # Initialize all sums to 0
     pattern_sums = [0] * MAX_PATTERNS
 
-    # For each buyer, we need to track if we've used a pattern.
-    # We can re-init a boolean list each time, or do something more clever below.
     visited_byers = [0] * MAX_PATTERNS
 
     for byer_id, secret in enumerate(secrets):
-        # create a local boolean list
-
-        # Single-pass approach
         prev_price = secret % 10
         d1 = d2 = d3 = None  # to store last 3 deltas
 
@@ -38,9 +31,7 @@ def main(input_text):
             current_price = secret % 10
             d4 = current_price - prev_price
 
-            # shift the deltas
             if i > 2:
-                # We have 4 deltas: d1, d2, d3, d4
                 pattern_code = (
                     (d1 + 9) + 19 * (d2 + 9) + 19**2 * (d3 + 9) + 19**3 * (d4 + 9)
                 )
@@ -53,10 +44,7 @@ def main(input_text):
 
             prev_price = current_price
 
-    # At the end, find the max
     best_value = max(pattern_sums)
-    # If you need to find all patterns that tie for best_value:
-    # best_patterns = [i for i, val in enumerate(pattern_sums) if val == best_value]
 
     print(f"Max bananas: {best_value}")
     return best_value
