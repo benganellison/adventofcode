@@ -16,6 +16,7 @@ mkdir "$next"
 cp -R template/* "$next"
 
 cd "$next"
-uv venv -p python3.12
+# uv venv -p python3.12
+uv venv -p pypy@3.10
 source .venv/bin/activate
 uv pip install -r requirements.txt
