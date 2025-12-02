@@ -14,7 +14,7 @@ def main(input):
         elif combination[0] == "R":
             val += combination[1]
             val %= 100
-        print("val: ", val)
+        # print("val: ", val)
         if val == 0:
             result += 1
 

@@ -20,29 +20,29 @@ def main(input):
         if val < 0:
             if previous_val == 0:
                 result += abs(val) // 100
-                print(
-                    (abs(val) // 100),
-                    f"count for val: {val=}, {previous_val=}, mod {val % 100}",
-                )
+                # print(
+                #     (abs(val) // 100),
+                #     f"count for val: {val=}, {previous_val=}, mod {val % 100}",
+                # )
             else:
                 result += (abs(val) // 100) + 1
-                print(
-                    (abs(val) // 100) + 1,
-                    f"count for val: {val=}, {previous_val=}, mod {val % 100}",
-                )
+                # print(
+                #     (abs(val) // 100) + 1,
+                #     f"count for val: {val=}, {previous_val=}, mod {val % 100}",
+                # )
 
         elif val >= 100:
             result += (val // 100)
-            print(
-                (val // 100),
-                f"count for val: {val=}, {previous_val=}, mod {val % 100}",
-            )
+            # print(
+            #     (val // 100),
+            #     f"count for val: {val=}, {previous_val=}, mod {val % 100}",
+            # )
 
         elif val == 0 and previous_val != 0:
             result += 1
-            print("1 count for val: ", val)
-        else:
-            print("val: ", val)
+            # print("1 count for val: ", val)
+        # else:
+        #     print("val: ", val)
 
         val %= 100
 
