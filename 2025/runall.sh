@@ -2,7 +2,7 @@
 
 # Run all the python scripts the subdirectories of this directory
 
-for dir in $(ls -d */); do
+for dir in $(ls -d [0-9][0-9]); do
     echo "Running scripts in $dir"
     cd $dir
     source .venv/bin/activate
