@@ -5,9 +5,8 @@ def parse_input_integers(input):
     return [int(x) for x in input.splitlines()]
 
 
-def parse_input_pairs(input):
-    pairs = [x.split("-") for x in input.splitlines()]
-    return [(int(x), int(z)) for x, z in pairs]
+def parse_input_pairs(instr):
+    return [tuple(int(x) for x in range.split('-')) for range in instr.splitlines()]
 
 
 def main(input):
