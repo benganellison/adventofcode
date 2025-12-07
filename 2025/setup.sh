@@ -15,6 +15,10 @@ mkdir "$next"
 
 cp -R template/* "$next"
 
+cp "$next"/code_template.py "$next"/part1.py
+cp "$next"/code_template.py "$next"/part2.py
+rm "$next"/code_template.py
+
 cd "$next"
 # uv venv -p python3.12
 uv venv -p python3.14

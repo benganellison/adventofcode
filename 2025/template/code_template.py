@@ -24,7 +24,7 @@ def parse_input_tuples(input):
 
 
 def main(input):
-    result = ""
+    result = 0
     return result
 
 
