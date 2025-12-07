@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.parametrize(
     "part,expected",
     [
-        ("part1", 4277556),
+        ("part1", 0),
         ("part2", 0),
     ],
     ids=["Part 1", "Part 2"],
