@@ -3,3 +3,4 @@ black
 flake8
 mypy
 ruff
+advent-of-code-data
